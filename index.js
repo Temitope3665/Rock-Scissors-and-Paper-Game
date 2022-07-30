@@ -8,7 +8,7 @@ import * as backend from './build/index.main.mjs';
 import { loadStdlib } from '@reach-sh/stdlib';
 const reach = loadStdlib(process.env);
 
-reach.setWalletFallback(reach.walletFallback({}));
+// reach.setWalletFallback(reach.walletFallback({}));
 
 const handToInt = {'ROCK': 0, 'PAPER': 1, 'SCISSORS': 2};
 const intToOutcome = ['Bob wins!', 'Draw!', 'Alice wins!'];
@@ -67,7 +67,7 @@ class Deployer extends Player {
     this.wager = reach.parseCurrency(this.state.wager); // UInt
     this.deadline = {ETH: 10, ALGO: 100, CFX: 1000}[reach.connector]; // UInt
     backend.Alice(ctc, this);
-    const ctcInfoStr = JSON.parse(await ctc.getInfo(), null, 2);
+    const ctcInfoStr = JSON.stringify(await ctc.getInfo(), null, 2);
     this.setState({view: 'WaitingForAttacher', ctcInfoStr});
   }
   render() { return renderView(this, DeployerViews); }
@@ -79,7 +79,6 @@ class Attacher extends Player {
   }
   attach(ctcInfoStr) {
     const ctc = this.props.acc.contract(backend, JSON.parse(ctcInfoStr));
-    console.log(JSON.parse(ctcInfoStr))
     this.setState({view: 'Attaching'});
     backend.Bob(ctc, this);
   }
